@@ -40,8 +40,9 @@ public class BasicSocket implements Serializable{
 		if(channelManager.verificationConnect(channelID,channelPassword,memberUUID)){
 			channel = channelManager.findChannel(channelID) ;
 			member  = channel.findMember(memberUUID) ;
+			session = userSession ;
 			addSocketToMember( member ,this);
-			session = userSession 			;
+			doAfterStart();
 			System.out.println(memberUUID + ": success connect");
 		    return ;
 		}
@@ -51,6 +52,9 @@ public class BasicSocket implements Serializable{
 		return ;
 	}
 	
+	public void doAfterStart() {}
+	
+
 	@OnError
 	public void error( @PathParam("uuid") 	String memberUUID,
 						 					Session userSession, 
@@ -65,13 +69,15 @@ public class BasicSocket implements Serializable{
 		try {
 			if(channel!=null) removeSocketFromMember(channel.findMember(memberUUID),this);
 			userSession.close(reason);
+			doAfterEnd();
 			System.out.println(memberUUID + ": Disconnected: " + reason.toString());
 		} catch (IOException e) {
 			//e.printStackTrace();
 		}
 	}
 	
-	
+	public void doAfterEnd() {}
+
 	/* onMessage working flow  */
 	@OnMessage
 	public void onMessage(Session userSession, String jsonString ) {

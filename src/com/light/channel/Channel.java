@@ -8,6 +8,7 @@ import java.util.Map;
 import com.light.bean.Member;
 import com.light.remoteController.RemoteController;
 import com.light.socket.BasicSocket;
+import com.light.socket.MediaSocketPair;
 
 public class Channel {
 
@@ -15,19 +16,24 @@ public class Channel {
 	 private Map < String , Member >  	memberMap                           ;
 	 private Map < String , String >  	chatMessageMap   	  				;
 	 private ChatMessageCounter 	    chatMessageCounter   	  		    ;
+	 private MediaSocketPairCounter 	mediaSocketPairCounter   	  		;
+	 private Map < String , MediaSocketPair >  mediaSocketPairMap   	  	; // key sender socket  value  receive socketMap
+	 
 	 private String 	  				channelID       					;
 	 private String 	  				channelPassword 					;
 	 private RemoteController    		controller	 	  					;
 	 private Callback                   defalutCallback                     ;
 	 
 	 public Channel( String channelID , String channelPassword ){
-		 this.memberMap 		= Collections.synchronizedMap(new LinkedHashMap<String,Member>()) ;
-		 this.chatMessageCounter= new  ChatMessageCounter();
-		 this.chatMessageMap 	= Collections.synchronizedMap(new LinkedHashMap<String,String>()) ;
-		 this.channelID			= channelID ;
-		 this.channelPassword	= channelPassword ;
-		 this.controller		= new RemoteController(this) ;
-		 this.defalutCallback   = new Callback(){ 
+		 this.memberMap 			 = Collections.synchronizedMap(new LinkedHashMap<String,Member>()) ;
+		 this.chatMessageCounter	 = new  ChatMessageCounter();
+		 this.chatMessageMap 		 = Collections.synchronizedMap(new LinkedHashMap<String,String>()) ;
+		 this.mediaSocketPairCounter = new MediaSocketPairCounter();
+		 this.mediaSocketPairMap     = Collections.synchronizedMap(new LinkedHashMap<String,MediaSocketPair>()) ;
+		 this.channelID				 = channelID ;
+		 this.channelPassword		 = channelPassword ;
+		 this.controller			 = new RemoteController(this) ;
+		 this.defalutCallback   	 = new Callback(){ 
 			 @Override 
 			 public Member findMemberByNameCallback(Member result){return result;}
 		 };
@@ -39,6 +45,17 @@ public class Channel {
 		 public Object getLock(){ return this.lock ; };
 		 public Integer add(){ return this.count++ ; };
 	 }
+	 
+	 
+	 
+	 public class  MediaSocketPairCounter {
+		 private Object   lock   = new Object()  ;
+		 private Integer  count  = 0  ;
+		 public Object getLock(){ return this.lock ; };
+		 public Integer add(){ return this.count++ ; };
+	 }
+	 
+	 
 	 
 	 public Integer getMemberCount(){
 		 return memberMap.size();
@@ -90,6 +107,16 @@ public class Channel {
 		 return this;
 	 }
 	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 	 /*getter & setter*/
 	 
 	 
@@ -113,11 +140,27 @@ public class Channel {
 		return chatMessageMap;
 	 }
 
-
+	 
 	 public void setChatMessageMap(Map<String, String> chatMessageMap) {
 		this.chatMessageMap = chatMessageMap;
 	 }
 	 
+	 
+	 public MediaSocketPairCounter getMediaSocketPairCounter() {
+		return mediaSocketPairCounter;
+	 }
+
+	 public void setMediaSocketPairCounter(MediaSocketPairCounter mediaSocketPairCounter) {
+		this.mediaSocketPairCounter = mediaSocketPairCounter;
+	 }
+
+	 public Map<String, MediaSocketPair> getMediaSocketPairMap() {
+		return mediaSocketPairMap;
+	 }
+
+	 public void setMediaSocketPairMap(Map<String, MediaSocketPair> mediaSocketPairMap) {
+		this.mediaSocketPairMap = mediaSocketPairMap;
+	 }
 	 
 	 public String getChannelID() {
 		return channelID;

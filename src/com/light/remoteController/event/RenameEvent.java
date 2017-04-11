@@ -5,22 +5,17 @@ import com.light.Exception.OperationException;
 import com.light.bean.Member;
 import com.light.channel.Channel;
 import com.light.channel.Channel.Callback;
-import com.light.channel.ChannelManager;
-import com.light.channel.ChannelManagerFactory;
 
 public class RenameEvent extends ActionEvent{
 	
-	static { isDependencyAction = false ; }
-	ChannelManager channelManager = ChannelManagerFactory.getChannelManagerInstance();
+	//static { isDependencyAction = false ; }
+	boolean isDependencyAction = false ;
 	
-	protected JsonObject data   ;
-	protected Member 	 member ;
-	
-	public RenameEvent(Member member,JsonObject data){
-		this.member = member;
-		this.data = data;
+	public RenameEvent(Member member, JsonObject data) {
+		super(member,data);
 	}
-	
+
+
 	@Override
 	public void handdle() throws OperationException {
 		String  channelID = data.get("channelID").getAsString();
