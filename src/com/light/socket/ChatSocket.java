@@ -1,6 +1,7 @@
 package com.light.socket;
 
 
+
 import javax.websocket.server.ServerEndpoint;
 import com.google.gson.JsonObject;
 import com.light.Exception.OperationException;
@@ -61,6 +62,7 @@ public class ChatSocket extends BasicSocket {
 			throw new OperationException("IlligalUserControl");
 		}
 	}
+	
 	
 	
 	@Override

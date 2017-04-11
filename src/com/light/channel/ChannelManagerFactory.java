@@ -6,7 +6,7 @@ public class ChannelManagerFactory {
 		ChannelManagerFactory.channelManager = new ChannelManager();
 	}
 	
-	static private ChannelManager channelManager = null ;
+	static ChannelManager channelManager = null ;
 	
 	static  public ChannelManager getChannelManagerInstance(){
 		if (channelManager == null) {

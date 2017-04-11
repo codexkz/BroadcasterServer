@@ -42,6 +42,8 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //		InputStream inputStream = request.getInputStream();
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream , StandardCharsets.UTF_8));
+		
+		/* init parameter  */
 		response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
 		HttpSession rqUser       	= request.getSession();
 		JsonObject  rqJson  		= new JsonParser().parse(request.getReader().readLine()).getAsJsonObject();
@@ -51,6 +53,7 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 		
 		try{
 			
+			/* verification  */
 			Channel rqChannel = verificationChannel(rqChannelID , rqChannelPassword) ;
 			Member  rqMember  = verificationMember (rqUser);
 			if(rqMember.getMemberName() == null ) rqMember.setMemberName( "Visitor" + (rqChannel.getMemberCount() + 1 ) );
@@ -61,16 +64,20 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 			
 			/* create response json  */
 			JsonObject rsJson = new JsonObject();
-			rsJson.addProperty("retcode", "100");
-			rsJson.addProperty("retmsg" , "ConnectSuccess");
-			rsJson.addProperty("uuid"	, rqMember.getMemberUUID());
-			rsJson.addProperty("name"	, rqMember.getMemberName());
-			response.getWriter().append(rsJson.toString());
+					   rsJson.addProperty( "uuid" 	, rqMember.getMemberUUID());
+					   rsJson.addProperty( "name" 	, rqMember.getMemberName());
+					   rsJson.add( "members" 	, rqChannel.getMemberArray());
+			response.getWriter().append(JsonMessage.createJsonMessage()
+											.set("action"	 , "connectSuccessInit")
+											.set("actionType", "channelInfo")
+											.set("data" 	 , rsJson)
+											.toString());
+			
 			
 			/* notify all member in channel that new one join us */
 			rqChannel.sendInfoToAllMemberInChannel(JsonMessage.createJsonMessage()
-													.set("action"	 ,"memberIn")
-													.set("actiontype", "channelInfo")
+													.set("action"	 , "memberIn")
+													.set("actionType", "channelInfo")
 													.set("data" 	 , rqMember.getMemberName())
 													.toString());
 			
@@ -80,6 +87,7 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 			rsJson.addProperty("retmsg" , e.getRetMsg());
 			response.getWriter().append(rsJson.toString());
 		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -120,9 +128,9 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 		Channel userChannel = (Channel) event.getSession().getAttribute("channel") ;
 		userChannel.removeMember(userMemeber.getMemberUUID());
 		
-		/* notify all member in channel that new one join us */
+		/* notify all member in channel that  one leave us */
 		userChannel.sendInfoToAllMemberInChannel(JsonMessage.createJsonMessage()
-												.set("action"	 ,"memberIn")
+												.set("action"	 ,"memberOut")
 												.set("actiontype", "channelInfo")
 												.set("data" 	 , userMemeber.getMemberName())
 												.toString());
