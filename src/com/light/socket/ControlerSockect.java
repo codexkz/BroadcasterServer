@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.light.Exception.OperationException;
 import com.light.bean.Member;
 
-@ServerEndpoint("/ControlerSockect/{uuid}/{channel}/{password}")
+@ServerEndpoint( value ="/ControlerSockect/{uuid}/{channel}/{password}")
 public class ControlerSockect extends BasicSocket {
 	
 	private static final long serialVersionUID = 1L;

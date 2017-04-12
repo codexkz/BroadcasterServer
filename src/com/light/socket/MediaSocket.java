@@ -1,17 +1,11 @@
 package com.light.socket;
 
 
-import java.io.IOException;
-import java.util.Map;
 
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-
-import com.google.gson.JsonObject;
 import com.light.bean.Member;
 
-@ServerEndpoint("/MediaReceiveSocket/{uuid}/{channel}/{password}/{mediasockettype}/{mediasockpairid}")
+@ServerEndpoint("/MediaSocket/{uuid}/{channel}/{password}/{mediasockettype}/{mediasockpairid}")
 public class MediaSocket extends BasicSocket {
 	
 	private static final long serialVersionUID = 1L;

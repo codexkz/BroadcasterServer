@@ -19,7 +19,7 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnClose;
 import javax.websocket.CloseReason;
 
-@ServerEndpoint("/BasicSocket")
+@ServerEndpoint(value ="/BasicSocket")
 public class BasicSocket implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class BasicSocket implements Serializable{
 						@PathParam("channel")  	String channelID,
 		       		   	@PathParam("password") 	String channelPassword,
 		       		   							Session userSession) throws IOException {
-		
+		System.out.println(channelID);
 		if(channelManager.verificationConnect(channelID,channelPassword,memberUUID)){
 			channel = channelManager.findChannel(channelID) ;
 			member  = channel.findMember(memberUUID) ;

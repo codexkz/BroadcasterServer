@@ -44,11 +44,12 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream , StandardCharsets.UTF_8));
 		
 		/* init parameter  */
-		response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+		String requerstCharset = StandardCharsets.UTF_8.toString();
+		//response.setCharacterEncoding(requerstCharset);
 		HttpSession rqUser       	= request.getSession();
 		JsonObject  rqJson  		= new JsonParser().parse(request.getReader().readLine()).getAsJsonObject();
-		String  rqChannelID 	   	= rqJson.get("id").getAsString();
-		String  rqChannelPassword 	= rqJson.get("pw").getAsString();
+		String  rqChannelID 	   	= java.net.URLEncoder.encode( rqJson.get("id").getAsString() , requerstCharset);
+		String  rqChannelPassword 	= java.net.URLEncoder.encode( rqJson.get("pw").getAsString() , requerstCharset);
 		System.out.println("rqChannelID : "+rqChannelID +" , rqChannelPassword : "+rqChannelPassword);
 		
 		try{
@@ -102,6 +103,7 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 	private synchronized Channel verificationChannel(String channelID ,String channelPassword) throws OperationException{
 		Channel channel = channelManager.findChannel(channelID ) ;
 		if( channel == null ) channel = channelManager.putChannel(channelID, new Channel( channelID , channelPassword ));
+		System.out.println(channel.getChannelPassword() +"/" + channelPassword);
 		if(!channel.getChannelPassword().equals(channelPassword) ) throw new OperationException("ChannelVerificationFail") ;
 		return channel ;
 	}

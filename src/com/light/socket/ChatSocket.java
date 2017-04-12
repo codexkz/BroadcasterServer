@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.light.Exception.OperationException;
 import com.light.bean.Member;
 
-@ServerEndpoint("/ChatSocket/{uuid}/{channel}/{password}")
+@ServerEndpoint(value ="/ChatSocket/{uuid}/{channel}/{password}")
 public class ChatSocket extends BasicSocket {
 	
 	private static final long serialVersionUID = 1L;
