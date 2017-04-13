@@ -24,7 +24,6 @@ public class ChannelManager {
 	}
 	
 	
-	
 	public Channel createNewChannel(String channelID , String channelPassword){
 		return new Channel( channelID , channelPassword );
 	}

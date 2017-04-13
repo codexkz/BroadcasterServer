@@ -1,5 +1,7 @@
 package com.light.socket;
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import javax.websocket.server.PathParam;
@@ -32,12 +34,18 @@ public class BasicSocket implements Serializable{
 	
 	/* lifecycle method */
 	@OnOpen
-	public void start(  @PathParam("uuid") 		String memberUUID,
-						@PathParam("channel")  	String channelID,
-		       		   	@PathParam("password") 	String channelPassword,
+	public void start(  @PathParam("uuid") 		String uuid,
+						@PathParam("channel")  	String channelid,
+		       		   	@PathParam("password") 	String channelpw,
 		       		   							Session userSession) throws IOException {
-		System.out.println(channelID);
-		if(channelManager.verificationConnect(channelID,channelPassword,memberUUID)){
+		
+		String encodeURLCharset = StandardCharsets.ISO_8859_1.toString() ;	
+		String memberUUID 	   = URLEncoder.encode(uuid	   	 , encodeURLCharset );
+		String channelID 	   = URLEncoder.encode(channelid , encodeURLCharset );
+		String channelPassword = URLEncoder.encode(channelpw , encodeURLCharset );
+		
+		//System.out.println(channelID);
+		if(channelManager.verificationConnect(channelID , channelPassword , memberUUID)){
 			channel = channelManager.findChannel(channelID) ;
 			member  = channel.findMember(memberUUID) ;
 			session = userSession ;
@@ -52,13 +60,13 @@ public class BasicSocket implements Serializable{
 		return ;
 	}
 	
+
 	public void doAfterStart() {}
 	
 
 	@OnError
-	public void error( @PathParam("uuid") 	String memberUUID,
-						 					Session userSession, 
-						 					Throwable e){
+	public void error(	Session userSession, 
+						Throwable e){
 		e.printStackTrace();
 	}
 	

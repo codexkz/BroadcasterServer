@@ -22,6 +22,8 @@ public class JsonMessage implements Serializable, Cloneable{
 		 jsonMessageBody.addProperty("data" 		, "");
 			
 		 jsonMessageHeader = new JsonObject();
+		 jsonMessageHeader.addProperty("retcode" 			, "100");
+		 jsonMessageHeader.addProperty("userName" 			, "");
 		 jsonMessageHeader.addProperty("userName" 			, "");
 		 jsonMessageHeader.addProperty("channelID"			, "");
 		 jsonMessageHeader.addProperty("channelPassword"	, "");

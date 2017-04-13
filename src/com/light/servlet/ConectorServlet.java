@@ -45,7 +45,7 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 		
 		/* init parameter  */
 		String requerstCharset = StandardCharsets.UTF_8.toString();
-		//response.setCharacterEncoding(requerstCharset);
+		response.setCharacterEncoding(requerstCharset);
 		HttpSession rqUser       	= request.getSession();
 		JsonObject  rqJson  		= new JsonParser().parse(request.getReader().readLine()).getAsJsonObject();
 		String  rqChannelID 	   	= java.net.URLEncoder.encode( rqJson.get("id").getAsString() , requerstCharset);
@@ -103,7 +103,6 @@ public class ConectorServlet extends HttpServlet implements HttpSessionListener 
 	private synchronized Channel verificationChannel(String channelID ,String channelPassword) throws OperationException{
 		Channel channel = channelManager.findChannel(channelID ) ;
 		if( channel == null ) channel = channelManager.putChannel(channelID, new Channel( channelID , channelPassword ));
-		System.out.println(channel.getChannelPassword() +"/" + channelPassword);
 		if(!channel.getChannelPassword().equals(channelPassword) ) throw new OperationException("ChannelVerificationFail") ;
 		return channel ;
 	}
