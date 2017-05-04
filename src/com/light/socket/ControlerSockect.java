@@ -14,6 +14,11 @@ public class ControlerSockect extends BasicSocket {
 	Object data   ;
 	
 	@Override
+	public BasicSocket chooseSocket(Member member){
+		return member.getControlerSocket();
+	};
+	
+	@Override
 	public void doBeforeSendMessageToAllMember(JsonObject rsJson) {
 		try{try{
 			action = rsJson.get("messageBody").getAsJsonObject().get("action").getAsString();
@@ -51,12 +56,6 @@ public class ControlerSockect extends BasicSocket {
 		}
 	}
 
-	@Override
-	public BasicSocket chooseSocket(Member member){
-		return member.getControlerSocket();
-	};
-	
-	
 	@Override
 	public void addSocketToMember(Member member,BasicSocket socket) {
 		member.setControlerSocket(socket);

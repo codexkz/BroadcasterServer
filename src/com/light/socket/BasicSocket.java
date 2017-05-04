@@ -44,7 +44,7 @@ public class BasicSocket implements Serializable{
 		String channelID 	   = URLEncoder.encode(channelid , encodeURLCharset );
 		String channelPassword = URLEncoder.encode(channelpw , encodeURLCharset );
 		
-		//System.out.println(channelID);
+		
 		if(channelManager.verificationConnect(channelID , channelPassword , memberUUID)){
 			channel = channelManager.findChannel(channelID) ;
 			member  = channel.findMember(memberUUID) ;
@@ -134,7 +134,7 @@ public class BasicSocket implements Serializable{
 	};
 	
 	public BasicSocket chooseSocket(Member member){
-		return member.getChatSocket();
+		return member.getControlerSocket();
 	};
 	
 	

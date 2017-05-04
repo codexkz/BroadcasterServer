@@ -2,6 +2,11 @@ package com.light.socket;
 
 
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import javax.websocket.OnMessage;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import com.light.bean.Member;
 
@@ -46,52 +51,17 @@ public class MediaSocket extends BasicSocket {
 	}
 	
 	
-//	@OnMessage
-//	public void onMessage(Session userSession, String jsonString ) {
-//		JsonObject jsonMessage   = jsonParser.parse(jsonString).getAsJsonObject();
-//		if(!jsonMessage.get("userUUID").getAsString().equals(member.getMemberUUID())) return;
-//		
-//		String 	   target  		 = jsonMessage.get("messageBody").getAsJsonObject().get("target").getAsString();
-//		if("all".equals(target)) doBeforeSendMessageToAllMember(jsonMessage); 
-//		else 					 doBeforeSendMessageToOneMember(jsonMessage,target);
-//	}
-//	
-//	public void sendMessageToAllMember(JsonObject rsJson){
-//		try{
-//			rsJson.addProperty("userUUID", "");
-//			System.out.println(rsJson.toString());
-//			Map<String, Member>  memberMap =   channel.getMemberMap();
-//			for( String  memberUUID  : memberMap.keySet() ){
-//				Session session= chooseSocket(memberMap.get(memberUUID)).getSession();
-//				if (session.isOpen()) session.getBasicRemote().sendText(rsJson.toString());
-//			}
-//		}catch(IOException e){
-//			e.printStackTrace();
-//		}
-//	};
-//	
-//	public void sendMessageToOneMember(JsonObject rsJson,String target){
-//		try{
-//			rsJson.addProperty("userUUID", "");
-//			System.out.println(rsJson.toString());
-//			Member targetMember = channel.findMemberByName(target);
-//			if(targetMember != null){
-//				Session session= chooseSocket(targetMember).getSession();
-//				if (session.isOpen()) session.getBasicRemote().sendText(rsJson.toString());
-//			}
-//		}catch(IOException e){
-//			e.printStackTrace();
-//		}
-//	};
-//	
-//	@Override
-//	public BasicSocket chooseSocket(Member member){
-//		return member.getMediaReceiveSocketMap();
-//	};
-	
-	
-	
-	
+	@OnMessage
+	public void onMessage(Session userSession, ByteBuffer data ) {
+		try{
+			for(MediaSocket socket : mediasockpair.getReceiverList() ){
+				if (socket.session.isOpen())  socket.session.getBasicRemote().sendBinary(data);
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
 	
 	@Override
 	public void addSocketToMember(Member member, BasicSocket socket) {

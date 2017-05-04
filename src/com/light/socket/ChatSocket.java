@@ -11,7 +11,11 @@ import com.light.bean.Member;
 public class ChatSocket extends BasicSocket {
 	
 	private static final long serialVersionUID = 1L;
-
+	
+	public BasicSocket chooseSocket(Member member){
+		return member.getChatSocket();
+	};
+	
 	@Override
 	public void doBeforeSendMessageToAllMember(JsonObject rqJson) {
 		try{
